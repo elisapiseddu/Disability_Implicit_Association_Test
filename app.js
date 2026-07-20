@@ -5,7 +5,7 @@
 */
 'use strict';
 
-const APP_VERSION = '5.0.0';
+const APP_VERSION = '5.1.0';
 const LEFT_KEY = 'e';
 const RIGHT_KEY = 'i';
 const ERROR_PENALTY_MS = 600;
@@ -23,24 +23,24 @@ function baseSvg(inner) {
 // Version 4 matched photographic stimulus set.
 // Image files must remain in the repository root beside index.html and app.js.
 const DISABLED_IMAGES = [
-  { id: 'white_cane_young_man', src: './D1_white_cane_young_man.jpg?v=40' },
-  { id: 'white_cane_young_woman', src: './D2_white_cane_young_woman.jpg?v=40' },
-  { id: 'wheelchair_middle_aged_man', src: './D3_wheelchair_middle_aged_man.jpg?v=40' },
-  { id: 'wheelchair_middle_aged_woman', src: './D4_wheelchair_middle_aged_woman.jpg?v=40' },
-  { id: 'prosthesis_young_athletic_man', src: './D5_prosthesis_young_athletic_man.jpg?v=40' },
-  { id: 'prosthesis_young_athletic_woman', src: './D6_prosthesis_young_athletic_woman.jpg?v=40' },
-  { id: 'wheelchair_older_man', src: './D7_wheelchair_older_man.jpg?v=40' },
-  { id: 'prosthesis_older_woman', src: './D8_prosthesis_older_woman.jpg?v=40' }
+  { id: 'white_cane_young_man', src: './D1_white_cane_young_man.jpg' },
+  { id: 'white_cane_young_woman', src: './D2_white_cane_young_woman.jpg' },
+  { id: 'wheelchair_middle_aged_man', src: './D3_wheelchair_middle_aged_man.jpg' },
+  { id: 'wheelchair_middle_aged_woman', src: './D4_wheelchair_middle_aged_woman.jpg' },
+  { id: 'prosthesis_young_athletic_man', src: './D5_prosthesis_young_athletic_man.jpg' },
+  { id: 'prosthesis_young_athletic_woman', src: './D6_prosthesis_young_athletic_woman.jpg' },
+  { id: 'wheelchair_older_man', src: './D7_wheelchair_older_man.jpg' },
+  { id: 'prosthesis_older_woman', src: './D8_prosthesis_older_woman.jpg' }
 ];
 const NON_DISABLED_IMAGES = [
-  { id: 'non_disabled_young_man', src: './A1_non_disabled_young_man.jpg?v=40' },
-  { id: 'non_disabled_young_woman', src: './A2_non_disabled_young_woman.jpg?v=40' },
-  { id: 'non_disabled_middle_aged_man', src: './A3_non_disabled_middle_aged_man.jpg?v=40' },
-  { id: 'non_disabled_middle_aged_woman', src: './A4_non_disabled_middle_aged_woman.jpg?v=40' },
-  { id: 'non_disabled_young_athletic_man', src: './A5_non_disabled_young_athletic_man.jpg?v=40' },
-  { id: 'non_disabled_young_athletic_woman', src: './A6_non_disabled_young_athletic_woman.jpg?v=40' },
-  { id: 'non_disabled_older_man', src: './A7_non_disabled_older_man.jpg?v=40' },
-  { id: 'non_disabled_older_woman', src: './A8_non_disabled_older_woman.jpg?v=40' }
+  { id: 'non_disabled_young_man', src: './A1_non_disabled_young_man.jpg' },
+  { id: 'non_disabled_young_woman', src: './A2_non_disabled_young_woman.jpg' },
+  { id: 'non_disabled_middle_aged_man', src: './A3_non_disabled_middle_aged_man.jpg' },
+  { id: 'non_disabled_middle_aged_woman', src: './A4_non_disabled_middle_aged_woman.jpg' },
+  { id: 'non_disabled_young_athletic_man', src: './A5_non_disabled_young_athletic_man.jpg' },
+  { id: 'non_disabled_young_athletic_woman', src: './A6_non_disabled_young_athletic_woman.jpg' },
+  { id: 'non_disabled_older_man', src: './A7_non_disabled_older_man.jpg' },
+  { id: 'non_disabled_older_woman', src: './A8_non_disabled_older_woman.jpg' }
 ];
 
 const setup = document.getElementById('setup');
