@@ -1,0 +1,10 @@
+DISABILITY IAT VERSION 3.1 — GITHUB UPLOAD
+
+1. Extract this ZIP.
+2. Upload ALL files from inside this folder to the ROOT of the GitHub repository.
+3. Replace the existing files and commit.
+4. Wait 1–2 minutes.
+5. Open the site with ?v=3.1 at the end of the URL.
+6. Hard refresh (Ctrl+Shift+R).
+
+The photographs are now embedded directly in app.js, so the task will still display them even if the stimuli folder is accidentally omitted.
