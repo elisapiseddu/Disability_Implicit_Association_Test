@@ -1,28 +1,22 @@
-# Disability IAT — Pilot Version 3.1
+# Disability IAT — Version 4.0 (code-only update)
 
-A free jsPsych browser implementation of the standard seven-block Disability IAT structure for pilot testing. It is not an official Harvard/Project Implicit distribution and uses original schematic SVG stimuli rather than Harvard-owned image files.
+This folder contains only the code files. Keep the 16 JPG photographs already uploaded to the GitHub repository.
 
-## Quick GitHub Pages update
+Upload and replace these files in the repository root:
 
-1. Download and unzip this package.
-2. In the GitHub repository, upload every file from inside `Disability_IAT_v2` to the repository root, replacing files with the same names.
-3. Wait 1–2 minutes.
-4. Open the Pages URL with `?v=2`, for example:
-   `https://USERNAME.github.io/REPOSITORY/?v=2`
-5. Hard-refresh once. If an old version remains, clear site data/service workers for that GitHub Pages domain.
+- `index.html`
+- `app.js`
+- `style.css`
+- `sw.js`
+- `manifest.json`
+- `admin.html`
 
-## First pilot
+Do **not** delete the 16 JPG files.
 
-Use a fake participant ID. Select touchscreen or keyboard. Complete the whole test. At the end, download both CSV and JSON and confirm that the participant ID appears in the filenames and data.
+Version 4 checks that every photograph exists before the test begins. If a filename is missing or different, the setup page lists the exact missing filename.
 
-## Important
+After committing, open the GitHub Pages URL with `?v=40`, for example:
 
-Do not upload participant results, REDCap exports, API tokens, names, phone numbers, or other confidential material to GitHub.
+`https://elisapiseddu.github.io/Disability_Implicit_Association_Test/?v=40`
 
-
-## Version 3.1 pilot vignette stimuli
-This version uses 16 original AI-generated photographic vignettes depicting East African adults: 8 without a visible mobility/vision disability cue and 8 with a wheelchair, crutches, or white cane. These are pilot stimuli and are not official Harvard/Project Implicit images. Run a recognition pilot before research use.
-
-
-## Version 3.1 reliability fix
-The 16 JPEG stimuli are embedded directly inside `app.js`. This prevents broken-image placeholders when GitHub uploads omit the `stimuli` subfolders or when an old service worker cache is active. The separate stimulus files remain in the package for review and documentation.
+Use a private window for the first check, or unregister the previous service worker once. Then open the test online once so Version 4 and the photographs are cached for offline use.

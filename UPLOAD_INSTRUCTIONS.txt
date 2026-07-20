@@ -1,1 +1,25 @@
-Upload every file in this folder to the ROOT of the GitHub repository. The 16 JPG files must appear beside index.html, not inside another folder. Test first in a private browser window using ?v=33.
+VERSION 4 — CODE ONLY
+
+1. Do not delete the JPG images already in the GitHub repository.
+2. Upload all files in this folder to the repository root.
+3. Replace the old code files when GitHub asks.
+4. Commit the changes.
+5. Open the site with ?v=40.
+
+The required image filenames are:
+A1_non_disabled_young_man.jpg
+A2_non_disabled_young_woman.jpg
+A3_non_disabled_middle_aged_man.jpg
+A4_non_disabled_middle_aged_woman.jpg
+A5_non_disabled_young_athletic_man.jpg
+A6_non_disabled_young_athletic_woman.jpg
+A7_non_disabled_older_man.jpg
+A8_non_disabled_older_woman.jpg
+D1_white_cane_young_man.jpg
+D2_white_cane_young_woman.jpg
+D3_wheelchair_middle_aged_man.jpg
+D4_wheelchair_middle_aged_woman.jpg
+D5_prosthesis_young_athletic_man.jpg
+D6_prosthesis_young_athletic_woman.jpg
+D7_wheelchair_older_man.jpg
+D8_prosthesis_older_woman.jpg

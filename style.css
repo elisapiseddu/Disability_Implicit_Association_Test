@@ -102,3 +102,19 @@ fieldset { margin-top: 18px; padding: 12px; }
   image-rendering: auto;
   object-fit: cover;
 }
+
+
+/* Version 4 */
+.iat-stimulus { top: 54%; }
+.stimulus-photo {
+  width: min(460px, 62vw);
+  height: min(520px, 55vh);
+  object-fit: contain;
+  background: #f3eee7;
+}
+.iat-error:empty { display: none; }
+.iat-error:not(:empty) { display: flex; }
+@media (max-height: 760px) {
+  .stimulus-photo { height: min(420px, 48vh); width: min(390px, 58vw); }
+  .iat-error { top: 22%; min-width: 90px; min-height: 90px; font-size: 72px; }
+}

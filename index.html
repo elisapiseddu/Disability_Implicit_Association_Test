@@ -6,13 +6,13 @@
   <meta name="theme-color" content="#ffffff" />
   <meta name="robots" content="noindex,nofollow" />
   <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="style.css?v=33" />
+  <link rel="stylesheet" href="style.css?v=40" />
   <title>Disability IAT</title>
 </head>
 <body>
   <main id="setup" class="setup-card">
     <h1>Disability Implicit Association Test</h1>
-    <p class="note">Pilot version 3.3 — photographic stimuli. Complete the fields below before starting.</p>
+    <p class="note">Version 4.0 — final matched photographic stimulus set. Complete the fields below before starting.</p>
 
     <label for="participant-id">Seller / participant ID</label>
     <input id="participant-id" autocomplete="off" inputmode="text" maxlength="40" placeholder="e.g. UGA-00123" />
@@ -44,8 +44,8 @@
 
   <div id="jspsych-target"></div>
 
-  <!-- Cache disabled in this pilot build to prevent stale images. -->
+  <!-- Version 4 registers sw.js for offline field use. -->
   <script src="https://unpkg.com/jspsych@8.2.3"></script>
-  <script src="app.js?v=33"></script>
+  <script src="app.js?v=40"></script>
 </body>
 </html>

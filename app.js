@@ -5,7 +5,7 @@
 */
 'use strict';
 
-const APP_VERSION = '3.3.0';
+const APP_VERSION = '4.0.0';
 const LEFT_KEY = 'e';
 const RIGHT_KEY = 'i';
 const ERROR_PENALTY_MS = 600;
@@ -20,51 +20,49 @@ function baseSvg(inner) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" role="img"><rect width="240" height="180" fill="white"/><g fill="none" stroke="#111" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">${inner}</g></svg>`;
 }
 
-// Pilot AI-generated vignette photographs. These are original synthetic images, not official Harvard/Project Implicit assets.
-// Before fieldwork, conduct a recognition pilot and replace any ambiguous image.
+// Version 4 matched photographic stimulus set.
+// Image files must remain in the repository root beside index.html and app.js.
 const DISABLED_IMAGES = [
-  { id: 'disabled_1', src: './iat33_disabled_1.jpg?v=33' },
-  { id: 'disabled_2', src: './iat33_disabled_2.jpg?v=33' },
-  { id: 'disabled_3', src: './iat33_disabled_3.jpg?v=33' },
-  { id: 'disabled_4', src: './iat33_disabled_4.jpg?v=33' },
-  { id: 'disabled_5', src: './iat33_disabled_5.jpg?v=33' },
-  { id: 'disabled_6', src: './iat33_disabled_6.jpg?v=33' },
-  { id: 'disabled_7', src: './iat33_disabled_7.jpg?v=33' },
-  { id: 'disabled_8', src: './iat33_disabled_8.jpg?v=33' }
+  { id: 'white_cane_young_man', src: './D1_white_cane_young_man.jpg?v=40' },
+  { id: 'white_cane_young_woman', src: './D2_white_cane_young_woman.jpg?v=40' },
+  { id: 'wheelchair_middle_aged_man', src: './D3_wheelchair_middle_aged_man.jpg?v=40' },
+  { id: 'wheelchair_middle_aged_woman', src: './D4_wheelchair_middle_aged_woman.jpg?v=40' },
+  { id: 'prosthesis_young_athletic_man', src: './D5_prosthesis_young_athletic_man.jpg?v=40' },
+  { id: 'prosthesis_young_athletic_woman', src: './D6_prosthesis_young_athletic_woman.jpg?v=40' },
+  { id: 'wheelchair_older_man', src: './D7_wheelchair_older_man.jpg?v=40' },
+  { id: 'prosthesis_older_woman', src: './D8_prosthesis_older_woman.jpg?v=40' }
 ];
-const ABLED_IMAGES = [
-  { id: 'abled_1', src: './iat33_abled_1.jpg?v=33' },
-  { id: 'abled_2', src: './iat33_abled_2.jpg?v=33' },
-  { id: 'abled_3', src: './iat33_abled_3.jpg?v=33' },
-  { id: 'abled_4', src: './iat33_abled_4.jpg?v=33' },
-  { id: 'abled_5', src: './iat33_abled_5.jpg?v=33' },
-  { id: 'abled_6', src: './iat33_abled_6.jpg?v=33' },
-  { id: 'abled_7', src: './iat33_abled_7.jpg?v=33' },
-  { id: 'abled_8', src: './iat33_abled_8.jpg?v=33' }
+const NON_DISABLED_IMAGES = [
+  { id: 'non_disabled_young_man', src: './A1_non_disabled_young_man.jpg?v=40' },
+  { id: 'non_disabled_young_woman', src: './A2_non_disabled_young_woman.jpg?v=40' },
+  { id: 'non_disabled_middle_aged_man', src: './A3_non_disabled_middle_aged_man.jpg?v=40' },
+  { id: 'non_disabled_middle_aged_woman', src: './A4_non_disabled_middle_aged_woman.jpg?v=40' },
+  { id: 'non_disabled_young_athletic_man', src: './A5_non_disabled_young_athletic_man.jpg?v=40' },
+  { id: 'non_disabled_young_athletic_woman', src: './A6_non_disabled_young_athletic_woman.jpg?v=40' },
+  { id: 'non_disabled_older_man', src: './A7_non_disabled_older_man.jpg?v=40' },
+  { id: 'non_disabled_older_woman', src: './A8_non_disabled_older_woman.jpg?v=40' }
 ];
 
 const setup = document.getElementById('setup');
 const target = document.getElementById('jspsych-target');
 const errorBox = document.getElementById('setup-error');
 
-// Version 3.3 intentionally disables the old cache while the image display is being piloted.
-(async function removeOldCaches() {
-  try {
-    if ('serviceWorker' in navigator) {
-      const regs = await navigator.serviceWorker.getRegistrations();
-      await Promise.all(regs.map(r => r.unregister()));
-    }
-    if ('caches' in window) {
-      const keys = await caches.keys();
-      await Promise.all(keys.map(k => caches.delete(k)));
-    }
-    const status = document.getElementById('offline-status');
-    if (status) status.textContent = 'Cache disabled for this pilot build. Use an internet connection while testing.';
-  } catch (e) {
-    const status = document.getElementById('offline-status');
-    if (status) status.textContent = 'Cache cleanup could not be completed; use a private browser window for testing.';
+// Register Version 4 offline cache after the page loads.
+window.addEventListener('load', async () => {
+  const status = document.getElementById('offline-status');
+  if (!('serviceWorker' in navigator)) {
+    if (status) status.textContent = 'Offline caching is not supported by this browser.';
+    return;
   }
-})();
+  try {
+    await navigator.serviceWorker.register('./sw.js?v=40');
+    if (status) status.textContent = navigator.onLine
+      ? 'Version 4 is ready. Open the test once online before using it offline.'
+      : 'Offline mode active.';
+  } catch (error) {
+    if (status) status.textContent = 'Offline cache could not be installed. The test can still run while online.';
+  }
+});
 
 function cleanId(value) {
   return value.trim().toUpperCase().replace(/[^A-Z0-9._-]/g, '');
@@ -225,10 +223,10 @@ function instructionTrial(title, leftLabels, rightLabels, mode, block) {
 
 function makeStimulusItems() {
   const disabled = DISABLED_IMAGES.map(x => ({ id: x.id, kind: 'image', value: x.src, category: 'disabled' }));
-  const abled = ABLED_IMAGES.map(x => ({ id: x.id, kind: 'image', value: x.src, category: 'abled' }));
+  const nonDisabled = NON_DISABLED_IMAGES.map(x => ({ id: x.id, kind: 'image', value: x.src, category: 'non_disabled' }));
   const good = GOOD_WORDS.map(x => ({ id: `good_${x.toLowerCase()}`, kind: 'word', value: x, category: 'good' }));
   const bad = BAD_WORDS.map(x => ({ id: `bad_${x.toLowerCase()}`, kind: 'word', value: x, category: 'bad' }));
-  return { disabled, abled, good, bad };
+  return { disabled, nonDisabled, good, bad };
 }
 
 function labelsFor(mapping, combined = false) {
@@ -247,7 +245,7 @@ function labelsFor(mapping, combined = false) {
 
 function trialFromStimulus(item, mapping, labels, meta, mode) {
   const side = item.category === 'disabled' ? mapping.disabledSide
-    : item.category === 'abled' ? (mapping.disabledSide === 'left' ? 'right' : 'left')
+    : item.category === 'non_disabled' ? (mapping.disabledSide === 'left' ? 'right' : 'left')
     : item.category === 'good' ? mapping.goodSide
     : (mapping.goodSide === 'left' ? 'right' : 'left');
   return {
@@ -339,6 +337,18 @@ function showFinish(session) {
   document.getElementById('save-json').onclick = () => downloadText(`${base}.json`, JSON.stringify(session, null, 2), 'application/json');
 }
 
+async function verifyAndPreloadImages() {
+  const images = [...DISABLED_IMAGES, ...NON_DISABLED_IMAGES];
+  const failed = [];
+  await Promise.all(images.map(item => new Promise(resolve => {
+    const image = new Image();
+    image.onload = resolve;
+    image.onerror = () => { failed.push(item.src.split('?')[0].replace('./', '')); resolve(); };
+    image.src = item.src;
+  })));
+  return failed;
+}
+
 async function startExperiment(metadata) {
   setup.hidden = true;
   target.innerHTML = '';
@@ -370,13 +380,13 @@ async function startExperiment(metadata) {
     content: `<h1>Disability Implicit Association Test</h1><p>You will sort symbols and words into categories shown at the top-left and top-right of the screen.</p><p>Work quickly, but try not to make mistakes. Keep your index fingers ready on the response keys or buttons.</p>`,
     response_mode: metadata.response_mode, data: { trial_role: 'welcome' }
   });
-  timeline.push(...buildBlock(1,20,[items.disabled,items.abled],mapping1,'target-practice','practice',metadata.response_mode,'Block 1 of 7: Sort the person symbols'));
+  timeline.push(...buildBlock(1,20,[items.disabled,items.nonDisabled],mapping1,'target-practice','practice',metadata.response_mode,'Block 1 of 7: Sort the person photographs'));
   timeline.push(...buildBlock(2,20,[items.good,items.bad],mapping1,'attribute-practice','practice',metadata.response_mode,'Block 2 of 7: Sort the words'));
-  timeline.push(...buildBlock(3,20,[items.disabled,items.abled,items.good,items.bad],mapping1,initialCondition,'practice',metadata.response_mode,'Block 3 of 7: Combined practice'));
-  timeline.push(...buildBlock(4,40,[items.disabled,items.abled,items.good,items.bad],mapping1,initialCondition,'test',metadata.response_mode,'Block 4 of 7: Combined task'));
-  timeline.push(...buildBlock(5,20,[items.disabled,items.abled],mapping2,'target-reversal','practice',metadata.response_mode,'Block 5 of 7: The person categories have switched sides'));
-  timeline.push(...buildBlock(6,20,[items.disabled,items.abled,items.good,items.bad],mapping2,reversedCondition,'practice',metadata.response_mode,'Block 6 of 7: New combined practice'));
-  timeline.push(...buildBlock(7,40,[items.disabled,items.abled,items.good,items.bad],mapping2,reversedCondition,'test',metadata.response_mode,'Block 7 of 7: Final combined task'));
+  timeline.push(...buildBlock(3,20,[items.disabled,items.nonDisabled,items.good,items.bad],mapping1,initialCondition,'practice',metadata.response_mode,'Block 3 of 7: Combined practice'));
+  timeline.push(...buildBlock(4,40,[items.disabled,items.nonDisabled,items.good,items.bad],mapping1,initialCondition,'test',metadata.response_mode,'Block 4 of 7: Combined task'));
+  timeline.push(...buildBlock(5,20,[items.disabled,items.nonDisabled],mapping2,'target-reversal','practice',metadata.response_mode,'Block 5 of 7: The person categories have switched sides'));
+  timeline.push(...buildBlock(6,20,[items.disabled,items.nonDisabled,items.good,items.bad],mapping2,reversedCondition,'practice',metadata.response_mode,'Block 6 of 7: New combined practice'));
+  timeline.push(...buildBlock(7,40,[items.disabled,items.nonDisabled,items.good,items.bad],mapping2,reversedCondition,'test',metadata.response_mode,'Block 7 of 7: Final combined task'));
 
   await jsPsych.run(timeline);
   metadata.finished_at = new Date().toISOString();
@@ -387,7 +397,7 @@ async function startExperiment(metadata) {
   showFinish(session);
 }
 
-document.getElementById('start-button').addEventListener('click', () => {
+document.getElementById('start-button').addEventListener('click', async () => {
   const participantId = cleanId(document.getElementById('participant-id').value);
   const confirmId = cleanId(document.getElementById('confirm-id').value);
   const enumeratorId = cleanId(document.getElementById('enumerator-id').value);
@@ -400,6 +410,12 @@ document.getElementById('start-button').addEventListener('click', () => {
   if (!tabletId) return errorBox.textContent = 'Enter the tablet ID.';
   if (!consent) return errorBox.textContent = 'Confirm that consent has been recorded.';
   if (typeof initJsPsych !== 'function') return errorBox.textContent = 'jsPsych did not load. Connect once to the internet and reload this app before offline fieldwork.';
+  errorBox.textContent = 'Checking the 16 photographs…';
+  const missingImages = await verifyAndPreloadImages();
+  if (missingImages.length) {
+    errorBox.textContent = `The test cannot start because these image files are missing or misnamed: ${missingImages.join(', ')}`;
+    return;
+  }
   errorBox.textContent = '';
   startExperiment({ participant_id: participantId, enumerator_id: enumeratorId, tablet_id: tabletId, response_mode: responseMode, session_uuid: uuid() });
 });
