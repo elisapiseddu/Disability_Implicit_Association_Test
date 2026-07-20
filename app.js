@@ -11,7 +11,7 @@ const RIGHT_KEY = 'i';
 const ERROR_PENALTY_MS = 600;
 
 const GOOD_WORDS = ['Cheer', 'Happy', 'Cheerful', 'Terrific', 'Excellent', 'Pleasure', 'Laughing', 'Magnificent'];
-const BAD_WORDS = ['Detest', 'Yucky', 'Gross', 'Horrific', 'Tragic', 'Evil', 'Selfish', 'Failure'];
+const BAD_WORDS = ['Detest', 'Yucky', 'Gross', 'Horrible', 'Tragic', 'Evil', 'Selfish', 'Failure'];
 
 function svgData(svg) {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
