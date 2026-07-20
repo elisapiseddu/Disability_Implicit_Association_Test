@@ -1,37 +1,24 @@
-const CACHE = 'disability-iat-v1.0.0';
-const LOCAL_ASSETS = ['./', './index.html', './style.css', './app.js', './manifest.json', './admin.html'];
-const JSPsychURL = 'https://unpkg.com/jspsych@8.2.3/dist/index.browser.js';
-
+'use strict';
+const CACHE = 'disability-iat-v2.0.0';
+const LOCAL_FILES = [
+  './', './index.html', './style.css', './app.js', './admin.html',
+  './manifest.json', './README.md', './DEPLOYMENT.md', './SCORING_AND_DATA.md'
+];
 self.addEventListener('install', event => {
-  event.waitUntil((async () => {
-    const cache = await caches.open(CACHE);
-    await cache.addAll(LOCAL_ASSETS);
-    try { await cache.add(JSPsychURL); } catch (e) { /* first load may be offline */ }
-    self.skipWaiting();
-  })());
+  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(LOCAL_FILES)).then(() => self.skipWaiting()));
 });
-
 self.addEventListener('activate', event => {
-  event.waitUntil((async () => {
-    const keys = await caches.keys();
-    await Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)));
-    self.clients.claim();
-  })());
+  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
-
 self.addEventListener('fetch', event => {
-  event.respondWith((async () => {
-    const cached = await caches.match(event.request);
-    if (cached) return cached;
-    try {
-      const response = await fetch(event.request);
-      if (event.request.method === 'GET') {
-        const cache = await caches.open(CACHE);
-        cache.put(event.request, response.clone());
+  if (event.request.method !== 'GET') return;
+  event.respondWith(
+    caches.match(event.request).then(hit => hit || fetch(event.request).then(response => {
+      if (response && response.ok) {
+        const copy = response.clone();
+        caches.open(CACHE).then(cache => cache.put(event.request, copy));
       }
       return response;
-    } catch (e) {
-      return caches.match('./index.html');
-    }
-  })());
+    }))
+  );
 });

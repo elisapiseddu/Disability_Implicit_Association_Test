@@ -5,7 +5,7 @@
 */
 'use strict';
 
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '2.0.0';
 const LEFT_KEY = 'e';
 const RIGHT_KEY = 'i';
 const ERROR_PENALTY_MS = 600;
@@ -22,16 +22,16 @@ function baseSvg(inner) {
 
 // Original schematic icons created for this package. Replace in CONFIG if official/licensed stimuli are obtained.
 const DISABLED_IMAGES = [
-  { id: 'wheelchair', src: svgData(baseSvg('<circle cx="88" cy="112" r="42"/><circle cx="121" cy="33" r="15"/><path d="M120 52v45h53l22 47M120 75h45M120 96l-30 8"/>')) },
-  { id: 'crutches', src: svgData(baseSvg('<path d="M72 28l20 26-46 100M53 53h51M168 28l-20 26 46 100M137 53h51"/>')) },
-  { id: 'white_cane', src: svgData(baseSvg('<circle cx="105" cy="35" r="15"/><path d="M105 52v55M105 72l-32 25M105 72l33 24M105 107l-27 50M105 107l32 50M138 96l45 62"/><path d="M173 145l20 15" stroke="#b00000"/>')) },
-  { id: 'guide_dog', src: svgData(baseSvg('<circle cx="72" cy="35" r="14"/><path d="M72 52v54M72 75l35 20M72 106l-25 50M72 106l27 50M107 95h58l18 27M127 95l-10 48M165 95l5 48M183 122l25-18M112 88l-18-25"/>')) }
+  { id: 'wheelchair', html: baseSvg('<circle cx="88" cy="112" r="42"/><circle cx="121" cy="33" r="15"/><path d="M120 52v45h53l22 47M120 75h45M120 96l-30 8"/>') },
+  { id: 'crutches', html: baseSvg('<path d="M72 28l20 26-46 100M53 53h51M168 28l-20 26 46 100M137 53h51"/>') },
+  { id: 'white_cane', html: baseSvg('<circle cx="105" cy="35" r="15"/><path d="M105 52v55M105 72l-32 25M105 72l33 24M105 107l-27 50M105 107l32 50M138 96l45 62"/><path d="M173 145l20 15" stroke="#b00000"/>') },
+  { id: 'guide_dog', html: baseSvg('<circle cx="72" cy="35" r="14"/><path d="M72 52v54M72 75l35 20M72 106l-25 50M72 106l27 50M107 95h58l18 27M127 95l-10 48M165 95l5 48M183 122l25-18M112 88l-18-25"/>') }
 ];
 const ABLED_IMAGES = [
-  { id: 'walking', src: svgData(baseSvg('<circle cx="115" cy="30" r="15"/><path d="M115 48l-10 55M108 66l-35 24M108 68l40 14M105 103l-35 50M105 103l48 45"/>')) },
-  { id: 'running', src: svgData(baseSvg('<circle cx="130" cy="28" r="15"/><path d="M128 46l-32 48M107 69l-48-4M108 70l40 32M96 94l-46 30M96 94l36 58"/>')) },
-  { id: 'road_walk', src: svgData(baseSvg('<path d="M35 160l55-95M205 160l-55-95M80 160h80"/><circle cx="120" cy="45" r="12"/><path d="M120 59v42M120 72l-25 20M120 72l24 19M120 101l-19 38M120 101l23 38"/>')) },
-  { id: 'skiing', src: svgData(baseSvg('<circle cx="103" cy="31" r="13"/><path d="M104 45l25 40M116 63l-45 12M128 84l-31 28M128 84l37 27M50 145l78-8M111 153l77-9M74 74l-25 70M151 87l34 57"/>')) }
+  { id: 'walking', html: baseSvg('<circle cx="115" cy="30" r="15"/><path d="M115 48l-10 55M108 66l-35 24M108 68l40 14M105 103l-35 50M105 103l48 45"/>') },
+  { id: 'running', html: baseSvg('<circle cx="130" cy="28" r="15"/><path d="M128 46l-32 48M107 69l-48-4M108 70l40 32M96 94l-46 30M96 94l36 58"/>') },
+  { id: 'road_walk', html: baseSvg('<path d="M35 160l55-95M205 160l-55-95M80 160h80"/><circle cx="120" cy="45" r="12"/><path d="M120 59v42M120 72l-25 20M120 72l24 19M120 101l-19 38M120 101l23 38"/>') },
+  { id: 'skiing', html: baseSvg('<circle cx="103" cy="31" r="13"/><path d="M104 45l25 40M116 63l-45 12M128 84l-31 28M128 84l37 27M50 145l78-8M111 153l77-9M74 74l-25 70M151 87l34 57"/>') }
 ];
 
 const setup = document.getElementById('setup');
@@ -129,7 +129,7 @@ class IATTrialPlugin {
     let finished = false;
 
     const stimHtml = trial.stimulus.kind === 'image'
-      ? `<img src="${trial.stimulus.value}" alt="classification symbol">`
+      ? `<div class="stimulus-svg" role="img" aria-label="person classification symbol">${trial.stimulus.value}</div>`
       : `<span>${trial.stimulus.value}</span>`;
     const touch = trial.response_mode === 'touch'
       ? `<button class="touch-zone left" data-key="${LEFT_KEY}">LEFT</button><button class="touch-zone right" data-key="${RIGHT_KEY}">RIGHT</button>`
@@ -211,8 +211,8 @@ function instructionTrial(title, leftLabels, rightLabels, mode, block) {
 }
 
 function makeStimulusItems() {
-  const disabled = DISABLED_IMAGES.map(x => ({ id: x.id, kind: 'image', value: x.src, category: 'disabled' }));
-  const abled = ABLED_IMAGES.map(x => ({ id: x.id, kind: 'image', value: x.src, category: 'abled' }));
+  const disabled = DISABLED_IMAGES.map(x => ({ id: x.id, kind: 'image', value: x.html, category: 'disabled' }));
+  const abled = ABLED_IMAGES.map(x => ({ id: x.id, kind: 'image', value: x.html, category: 'abled' }));
   const good = GOOD_WORDS.map(x => ({ id: `good_${x.toLowerCase()}`, kind: 'word', value: x, category: 'good' }));
   const bad = BAD_WORDS.map(x => ({ id: `bad_${x.toLowerCase()}`, kind: 'word', value: x, category: 'bad' }));
   return { disabled, abled, good, bad };
