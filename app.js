@@ -10,8 +10,8 @@ const LEFT_KEY = 'e';
 const RIGHT_KEY = 'i';
 const ERROR_PENALTY_MS = 600;
 
-const GOOD_WORDS = ['Joy', 'Love', 'Peace', 'Wonderful', 'Pleasure', 'Glorious', 'Laughter', 'Happy'];
-const BAD_WORDS = ['Agony', 'Terrible', 'Horrible', 'Nasty', 'Evil', 'Awful', 'Failure', 'Hurt'];
+const GOOD_WORDS = ['Cheer', 'Happy', 'Cheerful', 'Terrific', 'Excellent', 'Pleasure', 'Laughing', 'Magnificent'];
+const BAD_WORDS = ['Detest', 'Yucky', 'Gross', 'Horrific', 'Tragic', 'Evil', 'Selfish', 'Failure'];
 
 function svgData(svg) {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
