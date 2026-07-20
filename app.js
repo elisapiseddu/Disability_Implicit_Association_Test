@@ -5,13 +5,13 @@
 */
 'use strict';
 
-const APP_VERSION = '4.0.0';
+const APP_VERSION = '5.0.0';
 const LEFT_KEY = 'e';
 const RIGHT_KEY = 'i';
 const ERROR_PENALTY_MS = 600;
 
-const GOOD_WORDS = ['Cheer', 'Happy', 'Cheerful', 'Terrific', 'Excellent', 'Pleasure', 'Laughing', 'Magnificent'];
-const BAD_WORDS = ['Detest', 'Yucky', 'Gross', 'Horrible', 'Tragic', 'Evil', 'Selfish', 'Failure'];
+const GOOD_WORDS = ['Joy', 'Love', 'Peace', 'Wonderful', 'Pleasure', 'Glorious', 'Laughter', 'Happy'];
+const BAD_WORDS = ['Agony', 'Terrible', 'Horrible', 'Nasty', 'Evil', 'Awful', 'Failure', 'Hurt'];
 
 function svgData(svg) {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
@@ -47,7 +47,7 @@ const setup = document.getElementById('setup');
 const target = document.getElementById('jspsych-target');
 const errorBox = document.getElementById('setup-error');
 
-// Register Version 4 offline cache after the page loads.
+// Register Version 5 offline cache after the page loads.
 window.addEventListener('load', async () => {
   const status = document.getElementById('offline-status');
   if (!('serviceWorker' in navigator)) {
@@ -55,9 +55,9 @@ window.addEventListener('load', async () => {
     return;
   }
   try {
-    await navigator.serviceWorker.register('./sw.js?v=40');
+    await navigator.serviceWorker.register('./sw.js?v=50');
     if (status) status.textContent = navigator.onLine
-      ? 'Version 4 is ready. Open the test once online before using it offline.'
+      ? 'Version 5 is ready. Open the test once online before using it offline.'
       : 'Offline mode active.';
   } catch (error) {
     if (status) status.textContent = 'Offline cache could not be installed. The test can still run while online.';
@@ -313,6 +313,29 @@ function calculateD(rows) {
   };
 }
 
+function localDateFromIso(isoString) {
+  const d = isoString ? new Date(isoString) : new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function sessionRows(session) {
+  const summaryRow = { ...session.metadata, row_type: 'summary', ...session.summary };
+  const trialRows = session.trials.map(r => ({ ...session.metadata, row_type: 'trial', ...r }));
+  return [summaryRow, ...trialRows];
+}
+
+function participantCsvDetails(session) {
+  const safeId = session.metadata.participant_id.replace(/[^A-Z0-9_-]/g, '_');
+  const stamp = (session.metadata.finished_at || new Date().toISOString()).replace(/[:.]/g, '-');
+  return {
+    filename: `DAIAT_${safeId}_${stamp}.csv`,
+    text: rowsToCsv(sessionRows(session))
+  };
+}
+
 function localBackup(session) {
   const key = `disability_iat_session_${session.metadata.session_uuid}`;
   localStorage.setItem(key, JSON.stringify(session));
@@ -320,21 +343,32 @@ function localBackup(session) {
 }
 
 function showFinish(session) {
+  const csv = participantCsvDetails(session);
   const safeId = session.metadata.participant_id.replace(/[^A-Z0-9_-]/g, '_');
-  const stamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const base = `DAIAT_${safeId}_${stamp}`;
+  const stamp = (session.metadata.finished_at || new Date().toISOString()).replace(/[:.]/g, '-');
+  const jsonFilename = `DAIAT_${safeId}_${stamp}.json`;
   target.innerHTML = `<section class="finish-screen"><h1>Test complete</h1>
-    <p>The session has been backed up inside this tablet. Save both files before leaving this record.</p>
-    <div class="download-row"><button id="save-csv">Save CSV</button><button id="save-json">Save JSON backup</button></div>
+    <p><strong>Saved locally on this tablet.</strong> The participant CSV download will now be attempted automatically.</p>
+    <p id="download-status" class="note">Starting participant CSV download…</p>
+    <div class="download-row"><button id="save-csv">Download participant CSV again</button><button id="save-json">Save JSON backup</button></div>
     <p><strong>Participant ID:</strong> ${session.metadata.participant_id}<br><strong>Tablet:</strong> ${session.metadata.tablet_id}<br><strong>Session:</strong> ${session.metadata.session_uuid}</p>
-    <p class="small">The D-score is stored in the summary row and JSON file. Positive scores indicate a faster Disabled+Bad / Non-disabled+Good pairing than the reverse. Do not show individual results to respondents.</p>
+    <p class="small">At the end of the day, open the device backup manager and export the daily combined CSV. Do not clear browser data until the daily file has been transferred and checked.</p>
     <p><a href="admin.html">Open device backup manager</a></p></section>`;
-  document.getElementById('save-csv').onclick = () => {
-    const summaryRow = { ...session.metadata, row_type: 'summary', ...session.summary };
-    const trialRows = session.trials.map(r => ({ ...session.metadata, row_type: 'trial', ...r }));
-    downloadText(`${base}.csv`, rowsToCsv([summaryRow, ...trialRows]), 'text/csv;charset=utf-8');
-  };
-  document.getElementById('save-json').onclick = () => downloadText(`${base}.json`, JSON.stringify(session, null, 2), 'application/json');
+
+  const downloadParticipantCsv = () => downloadText(csv.filename, csv.text, 'text/csv;charset=utf-8');
+  document.getElementById('save-csv').onclick = downloadParticipantCsv;
+  document.getElementById('save-json').onclick = () => downloadText(jsonFilename, JSON.stringify(session, null, 2), 'application/json');
+
+  // Attempt the participant-level safety download immediately. Some browsers may
+  // block automatic downloads; the large button remains available as a fallback.
+  setTimeout(() => {
+    try {
+      downloadParticipantCsv();
+      document.getElementById('download-status').textContent = `Participant CSV requested: ${csv.filename}. Check the Downloads folder.`;
+    } catch (error) {
+      document.getElementById('download-status').textContent = 'Automatic download was blocked. Tap “Download participant CSV again”.';
+    }
+  }, 300);
 }
 
 async function verifyAndPreloadImages() {
@@ -390,6 +424,7 @@ async function startExperiment(metadata) {
 
   await jsPsych.run(timeline);
   metadata.finished_at = new Date().toISOString();
+  metadata.collection_date = localDateFromIso(metadata.finished_at);
   const trials = jsPsych.data.get().values();
   const summary = calculateD(trials);
   const session = { metadata, summary, trials };

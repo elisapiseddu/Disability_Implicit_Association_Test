@@ -1,8 +1,130 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="style.css"><title>IAT backup manager</title></head>
-<body><main class="setup-card"><h1>Device backup manager</h1><p>This page lists IAT sessions stored in this browser on this tablet.</p><div id="sessions"></div><button id="export-all">Export all sessions as JSON</button> <button id="clear-all">Clear all stored sessions</button><p><a href="index.html">Return to test</a></p></main><script>
-const keys=Object.keys(localStorage).filter(k=>k.startsWith('disability_iat_session_')).sort();
-const box=document.getElementById('sessions');
-box.innerHTML=keys.length?`<ol>${keys.map(k=>{const s=JSON.parse(localStorage.getItem(k));return `<li><strong>${s.metadata.participant_id}</strong> — ${s.metadata.finished_at||s.metadata.started_at} — ${s.metadata.tablet_id}</li>`}).join('')}</ol>`:'<p>No saved sessions.</p>';
-document.getElementById('export-all').onclick=()=>{const data=keys.map(k=>JSON.parse(localStorage.getItem(k)));const b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=`DAIAT_DEVICE_BACKUP_${new Date().toISOString().replace(/[:.]/g,'-')}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
-document.getElementById('clear-all').onclick=()=>{if(confirm('Delete all IAT backups from this browser? Only do this after confirming secure copies exist.')){keys.forEach(k=>localStorage.removeItem(k));location.reload();}};
-</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="style.css?v=50">
+  <title>IAT backup manager</title>
+</head>
+<body>
+<main class="setup-card">
+  <h1>Device backup manager</h1>
+  <p>Completed IAT sessions remain stored in this browser until they are deliberately cleared.</p>
+
+  <div id="summary"></div>
+
+  <label for="export-date">Collection date to export</label>
+  <select id="export-date"></select>
+  <div class="download-row">
+    <button id="export-day">Export selected day as combined CSV</button>
+    <button id="export-json">Export all sessions as JSON backup</button>
+  </div>
+  <p id="export-status" class="note" aria-live="polite"></p>
+
+  <details>
+    <summary>Show stored sessions</summary>
+    <div id="sessions"></div>
+  </details>
+
+  <hr>
+  <button id="clear-all">Clear all stored sessions</button>
+  <p class="small"><strong>Warning:</strong> Clear data only after the combined CSV and JSON backup have been transferred to secure storage and checked.</p>
+  <p><a href="index.html">Return to test</a></p>
+</main>
+<script>
+'use strict';
+
+function csvEscape(value) {
+  if (value === null || value === undefined) return '';
+  const text = typeof value === 'object' ? JSON.stringify(value) : String(value);
+  return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+}
+function rowsToCsv(rows) {
+  const keys = [...new Set(rows.flatMap(row => Object.keys(row)))];
+  return [keys.join(','), ...rows.map(row => keys.map(key => csvEscape(row[key])).join(','))].join('\n');
+}
+function downloadText(filename, text, type) {
+  const blob = new Blob([text], { type });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function localDateFromIso(isoString) {
+  const date = isoString ? new Date(isoString) : new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+function sessionDate(session) {
+  return session.metadata.collection_date || localDateFromIso(session.metadata.finished_at || session.metadata.started_at);
+}
+function sessionRows(session) {
+  const summary = { ...session.metadata, row_type: 'summary', ...session.summary };
+  const trials = session.trials.map(trial => ({ ...session.metadata, row_type: 'trial', ...trial }));
+  return [summary, ...trials];
+}
+
+const keys = Object.keys(localStorage).filter(key => key.startsWith('disability_iat_session_')).sort();
+const sessions = keys.map(key => {
+  try { return JSON.parse(localStorage.getItem(key)); }
+  catch (error) { return null; }
+}).filter(Boolean);
+const dates = [...new Set(sessions.map(sessionDate))].sort().reverse();
+const tablets = [...new Set(sessions.map(session => session.metadata.tablet_id).filter(Boolean))];
+const dateSelect = document.getElementById('export-date');
+const today = localDateFromIso(new Date().toISOString());
+
+if (dates.length) {
+  dateSelect.innerHTML = dates.map(date => `<option value="${date}"${date === today ? ' selected' : ''}>${date}</option>`).join('');
+} else {
+  dateSelect.innerHTML = '<option value="">No stored dates</option>';
+}
+
+document.getElementById('summary').innerHTML = sessions.length
+  ? `<p><strong>${sessions.length}</strong> completed session(s) stored on this tablet across <strong>${dates.length}</strong> day(s).</p>`
+  : '<p><strong>No saved sessions.</strong></p>';
+
+document.getElementById('sessions').innerHTML = sessions.length
+  ? `<ol>${sessions.map(session => `<li><strong>${session.metadata.participant_id}</strong> — ${sessionDate(session)} — ${session.metadata.finished_at || session.metadata.started_at} — ${session.metadata.tablet_id}</li>`).join('')}</ol>`
+  : '<p>No saved sessions.</p>';
+
+document.getElementById('export-day').onclick = () => {
+  const selectedDate = dateSelect.value;
+  const selected = sessions.filter(session => sessionDate(session) === selectedDate);
+  if (!selected.length) {
+    document.getElementById('export-status').textContent = 'No sessions are stored for the selected date.';
+    return;
+  }
+  const rows = selected.flatMap(sessionRows);
+  const tabletPart = tablets.length === 1 ? tablets[0].replace(/[^A-Z0-9_-]/gi, '_') : 'MULTI-TABLET';
+  const filename = `DAIAT_${tabletPart}_${selectedDate}_DAILY.csv`;
+  downloadText(filename, rowsToCsv(rows), 'text/csv;charset=utf-8');
+  localStorage.setItem(`disability_iat_export_${selectedDate}`, new Date().toISOString());
+  document.getElementById('export-status').textContent = `${selected.length} session(s) exported to ${filename}. The local browser copies have not been deleted.`;
+};
+
+document.getElementById('export-json').onclick = () => {
+  if (!sessions.length) {
+    document.getElementById('export-status').textContent = 'No sessions are stored.';
+    return;
+  }
+  const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+  downloadText(`DAIAT_DEVICE_BACKUP_${stamp}.json`, JSON.stringify(sessions, null, 2), 'application/json');
+  document.getElementById('export-status').textContent = `${sessions.length} session(s) exported as a complete JSON backup.`;
+};
+
+document.getElementById('clear-all').onclick = () => {
+  if (confirm('Delete all IAT backups from this browser? Only continue after confirming secure copies exist.')) {
+    keys.forEach(key => localStorage.removeItem(key));
+    location.reload();
+  }
+};
+</script>
+</body>
+</html>
