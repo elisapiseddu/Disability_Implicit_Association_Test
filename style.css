@@ -1,0 +1,70 @@
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #111;
+  background: #fff;
+  --left: #164e8a;
+  --right: #8a2c16;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; }
+button, input { font: inherit; }
+.setup-card {
+  width: min(720px, calc(100% - 28px));
+  margin: 24px auto;
+  padding: 24px;
+  border: 1px solid #bbb;
+  border-radius: 12px;
+  box-shadow: 0 3px 16px rgba(0,0,0,.08);
+}
+.setup-card h1 { margin-top: 0; }
+.setup-card label:not(.radio):not(.checkbox) { display: block; margin-top: 14px; font-weight: 700; }
+.setup-card input[type="text"], .setup-card input:not([type]) {
+  width: 100%; padding: 12px; margin-top: 6px; border: 1px solid #888; border-radius: 6px;
+}
+fieldset { margin-top: 18px; padding: 12px; }
+.radio, .checkbox { display: block; margin: 10px 0; }
+#start-button, .primary-button {
+  margin-top: 16px; min-height: 48px; padding: 10px 18px; border: 0; border-radius: 7px;
+  background: #222; color: #fff; font-weight: 700;
+}
+#setup-error { min-height: 24px; color: #9b0000; font-weight: 700; margin-top: 10px; }
+.note { color: #444; }
+
+.iat-screen {
+  position: fixed; inset: 0; min-height: 100dvh; background: #fff; overflow: hidden;
+  touch-action: manipulation; user-select: none; -webkit-user-select: none;
+}
+.iat-header { position: absolute; top: 16px; left: 18px; right: 18px; display: flex; justify-content: space-between; gap: 20px; }
+.iat-category { width: 44%; font-size: clamp(18px, 3.2vw, 34px); font-weight: 800; line-height: 1.15; }
+.iat-category.left { text-align: left; color: var(--left); }
+.iat-category.right { text-align: right; color: var(--right); }
+.iat-or { color: #111; font-size: .7em; font-weight: 600; }
+.iat-stimulus {
+  position: absolute; left: 50%; top: 52%; transform: translate(-50%, -50%);
+  max-width: 70vw; max-height: 46vh; text-align: center;
+  font-size: clamp(42px, 9vw, 92px); font-weight: 800;
+}
+.iat-stimulus img { max-width: min(300px, 52vw); max-height: 32vh; }
+.iat-error { position: absolute; left: 50%; top: 36%; transform: translate(-50%, -50%); color: #c40000; font-size: 88px; font-weight: 900; }
+.iat-footer { position: absolute; left: 20px; right: 20px; bottom: 16px; display: flex; justify-content: space-between; align-items: end; }
+.key-label { font-size: clamp(18px, 2.8vw, 30px); font-weight: 800; }
+.touch-zone {
+  width: 44%; min-height: 82px; border: 3px solid currentColor; background: rgba(255,255,255,.94);
+  border-radius: 12px; font-size: clamp(20px, 3vw, 30px); font-weight: 800;
+}
+.touch-zone.left { color: var(--left); }
+.touch-zone.right { color: var(--right); }
+.instruction-screen, .finish-screen {
+  width: min(850px, calc(100% - 30px)); margin: 5vh auto; padding: 26px; line-height: 1.5;
+}
+.instruction-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 18px 0; }
+.instruction-box { border: 2px solid #444; border-radius: 8px; padding: 14px; text-align: center; font-size: 1.25rem; font-weight: 700; }
+.download-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.download-row button { min-height: 48px; padding: 10px 16px; }
+.small { font-size: .9rem; color: #444; }
+@media (max-width: 600px) {
+  .setup-card { padding: 17px; }
+  .iat-header { top: 10px; }
+  .iat-category { width: 47%; }
+  .instruction-grid { grid-template-columns: 1fr; }
+}

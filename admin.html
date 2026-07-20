@@ -1,0 +1,8 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="style.css"><title>IAT backup manager</title></head>
+<body><main class="setup-card"><h1>Device backup manager</h1><p>This page lists IAT sessions stored in this browser on this tablet.</p><div id="sessions"></div><button id="export-all">Export all sessions as JSON</button> <button id="clear-all">Clear all stored sessions</button><p><a href="index.html">Return to test</a></p></main><script>
+const keys=Object.keys(localStorage).filter(k=>k.startsWith('disability_iat_session_')).sort();
+const box=document.getElementById('sessions');
+box.innerHTML=keys.length?`<ol>${keys.map(k=>{const s=JSON.parse(localStorage.getItem(k));return `<li><strong>${s.metadata.participant_id}</strong> — ${s.metadata.finished_at||s.metadata.started_at} — ${s.metadata.tablet_id}</li>`}).join('')}</ol>`:'<p>No saved sessions.</p>';
+document.getElementById('export-all').onclick=()=>{const data=keys.map(k=>JSON.parse(localStorage.getItem(k)));const b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=`DAIAT_DEVICE_BACKUP_${new Date().toISOString().replace(/[:.]/g,'-')}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
+document.getElementById('clear-all').onclick=()=>{if(confirm('Delete all IAT backups from this browser? Only do this after confirming secure copies exist.')){keys.forEach(k=>localStorage.removeItem(k));location.reload();}};
+</script></body></html>

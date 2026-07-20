@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Disability IAT</title>
+</head>
+<body>
+  <main id="setup" class="setup-card">
+    <h1>Disability Implicit Association Test</h1>
+    <p class="note">Research administration version. Complete the fields below before starting.</p>
+
+    <label for="participant-id">Seller / participant ID</label>
+    <input id="participant-id" autocomplete="off" inputmode="text" maxlength="40" placeholder="e.g. UGA-00123" />
+
+    <label for="confirm-id">Confirm participant ID</label>
+    <input id="confirm-id" autocomplete="off" inputmode="text" maxlength="40" placeholder="Enter the same ID again" />
+
+    <label for="enumerator-id">Enumerator ID</label>
+    <input id="enumerator-id" autocomplete="off" inputmode="text" maxlength="30" placeholder="e.g. ENUM-04" />
+
+    <label for="tablet-id">Tablet ID</label>
+    <input id="tablet-id" autocomplete="off" inputmode="text" maxlength="20" placeholder="e.g. TAB-03" />
+
+    <fieldset>
+      <legend>Response mode</legend>
+      <label class="radio"><input type="radio" name="mode" value="keyboard" checked /> Physical keyboard (recommended)</label>
+      <label class="radio"><input type="radio" name="mode" value="touch" /> Touchscreen buttons (pilot carefully)</label>
+    </fieldset>
+
+    <label class="checkbox"><input id="consent-check" type="checkbox" /> Consent has already been recorded in REDCap.</label>
+
+    <div id="setup-error" role="alert" aria-live="polite"></div>
+    <button id="start-button" type="button">Start test</button>
+    <details>
+      <summary>Offline status</summary>
+      <p id="offline-status">Checking...</p>
+    </details>
+  </main>
+
+  <div id="jspsych-target"></div>
+
+  <!-- jsPsych is cached by the service worker after the first online load. -->
+  <script src="https://unpkg.com/jspsych@8.2.3/dist/index.browser.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

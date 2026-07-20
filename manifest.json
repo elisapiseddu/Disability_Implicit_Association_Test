@@ -1,0 +1,9 @@
+{
+  "name": "Offline Disability IAT",
+  "short_name": "Disability IAT",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "description": "Offline-capable jsPsych Disability Implicit Association Test for research administration."
+}
