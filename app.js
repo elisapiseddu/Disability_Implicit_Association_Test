@@ -111,14 +111,14 @@ class IATTrialPlugin {
   static info = {
     name: 'iat-custom',
     parameters: {
-      stimulus: { type: jsPsych.ParameterType.OBJECT, default: undefined },
-      left_labels: { type: jsPsych.ParameterType.HTML_STRING, default: '' },
-      right_labels: { type: jsPsych.ParameterType.HTML_STRING, default: '' },
-      correct_key: { type: jsPsych.ParameterType.KEY, default: undefined },
-      response_mode: { type: jsPsych.ParameterType.STRING, default: 'keyboard' },
-      block: { type: jsPsych.ParameterType.INT, default: 0 },
-      condition: { type: jsPsych.ParameterType.STRING, default: '' },
-      phase: { type: jsPsych.ParameterType.STRING, default: '' }
+      stimulus: { type: jsPsychModule.ParameterType.OBJECT, default: undefined },
+      left_labels: { type: jsPsychModule.ParameterType.HTML_STRING, default: '' },
+      right_labels: { type: jsPsychModule.ParameterType.HTML_STRING, default: '' },
+      correct_key: { type: jsPsychModule.ParameterType.KEY, default: undefined },
+      response_mode: { type: jsPsychModule.ParameterType.STRING, default: 'keyboard' },
+      block: { type: jsPsychModule.ParameterType.INT, default: 0 },
+      condition: { type: jsPsychModule.ParameterType.STRING, default: '' },
+      phase: { type: jsPsychModule.ParameterType.STRING, default: '' }
     }
   };
   trial(display, trial) {
@@ -175,8 +175,8 @@ class ContinuePlugin {
   static info = {
     name: 'continue-custom',
     parameters: {
-      content: { type: jsPsych.ParameterType.HTML_STRING, default: '' },
-      response_mode: { type: jsPsych.ParameterType.STRING, default: 'keyboard' }
+      content: { type: jsPsychModule.ParameterType.HTML_STRING, default: '' },
+      response_mode: { type: jsPsychModule.ParameterType.STRING, default: 'keyboard' }
     }
   };
   trial(display, trial) {
