@@ -46,13 +46,13 @@ trials
 The score is constructed so that a **positive value** means faster performance when:
 
 ```text
-Abled Persons + Good
+Non-disabled Persons + Good
 Disabled Persons + Bad
 ```
 
 share response keys than when the pairings are reversed.
 
-A positive value therefore reflects a relative automatic preference for abled over disabled persons under the conventional interpretation. Do not report an individual score as a diagnosis or stable personal trait.
+A positive value therefore reflects a relative automatic preference for abled over disnon-disabled persons under the conventional interpretation. Do not report an individual score as a diagnosis or stable personal trait.
 
 ## Algorithm implemented
 

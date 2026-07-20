@@ -5,7 +5,7 @@
 */
 'use strict';
 
-const APP_VERSION = '3.2.0';
+const APP_VERSION = '3.3.0';
 const LEFT_KEY = 'e';
 const RIGHT_KEY = 'i';
 const ERROR_PENALTY_MS = 600;
@@ -23,31 +23,31 @@ function baseSvg(inner) {
 // Pilot AI-generated vignette photographs. These are original synthetic images, not official Harvard/Project Implicit assets.
 // Before fieldwork, conduct a recognition pilot and replace any ambiguous image.
 const DISABLED_IMAGES = [
-  { id: 'disabled_1', src: './iat32_disabled_1.jpg?v=32' },
-  { id: 'disabled_2', src: './iat32_disabled_2.jpg?v=32' },
-  { id: 'disabled_3', src: './iat32_disabled_3.jpg?v=32' },
-  { id: 'disabled_4', src: './iat32_disabled_4.jpg?v=32' },
-  { id: 'disabled_5', src: './iat32_disabled_5.jpg?v=32' },
-  { id: 'disabled_6', src: './iat32_disabled_6.jpg?v=32' },
-  { id: 'disabled_7', src: './iat32_disabled_7.jpg?v=32' },
-  { id: 'disabled_8', src: './iat32_disabled_8.jpg?v=32' }
+  { id: 'disabled_1', src: './iat33_disabled_1.jpg?v=33' },
+  { id: 'disabled_2', src: './iat33_disabled_2.jpg?v=33' },
+  { id: 'disabled_3', src: './iat33_disabled_3.jpg?v=33' },
+  { id: 'disabled_4', src: './iat33_disabled_4.jpg?v=33' },
+  { id: 'disabled_5', src: './iat33_disabled_5.jpg?v=33' },
+  { id: 'disabled_6', src: './iat33_disabled_6.jpg?v=33' },
+  { id: 'disabled_7', src: './iat33_disabled_7.jpg?v=33' },
+  { id: 'disabled_8', src: './iat33_disabled_8.jpg?v=33' }
 ];
 const ABLED_IMAGES = [
-  { id: 'abled_1', src: './iat32_abled_1.jpg?v=32' },
-  { id: 'abled_2', src: './iat32_abled_2.jpg?v=32' },
-  { id: 'abled_3', src: './iat32_abled_3.jpg?v=32' },
-  { id: 'abled_4', src: './iat32_abled_4.jpg?v=32' },
-  { id: 'abled_5', src: './iat32_abled_5.jpg?v=32' },
-  { id: 'abled_6', src: './iat32_abled_6.jpg?v=32' },
-  { id: 'abled_7', src: './iat32_abled_7.jpg?v=32' },
-  { id: 'abled_8', src: './iat32_abled_8.jpg?v=32' }
+  { id: 'abled_1', src: './iat33_abled_1.jpg?v=33' },
+  { id: 'abled_2', src: './iat33_abled_2.jpg?v=33' },
+  { id: 'abled_3', src: './iat33_abled_3.jpg?v=33' },
+  { id: 'abled_4', src: './iat33_abled_4.jpg?v=33' },
+  { id: 'abled_5', src: './iat33_abled_5.jpg?v=33' },
+  { id: 'abled_6', src: './iat33_abled_6.jpg?v=33' },
+  { id: 'abled_7', src: './iat33_abled_7.jpg?v=33' },
+  { id: 'abled_8', src: './iat33_abled_8.jpg?v=33' }
 ];
 
 const setup = document.getElementById('setup');
 const target = document.getElementById('jspsych-target');
 const errorBox = document.getElementById('setup-error');
 
-// Version 3.2 intentionally disables the old cache while the image display is being piloted.
+// Version 3.3 intentionally disables the old cache while the image display is being piloted.
 (async function removeOldCaches() {
   try {
     if ('serviceWorker' in navigator) {
@@ -236,7 +236,7 @@ function labelsFor(mapping, combined = false) {
   const left = [], right = [];
   if (combined || mapping.targetOnly) {
     (mapping.disabledSide === 'left' ? left : right).push('Disabled Persons');
-    (mapping.disabledSide === 'left' ? right : left).push('Abled Persons');
+    (mapping.disabledSide === 'left' ? right : left).push('Non-disabled Persons');
   }
   if (combined || mapping.attributeOnly) {
     (mapping.goodSide === 'left' ? left : right).push('Good');
@@ -329,7 +329,7 @@ function showFinish(session) {
     <p>The session has been backed up inside this tablet. Save both files before leaving this record.</p>
     <div class="download-row"><button id="save-csv">Save CSV</button><button id="save-json">Save JSON backup</button></div>
     <p><strong>Participant ID:</strong> ${session.metadata.participant_id}<br><strong>Tablet:</strong> ${session.metadata.tablet_id}<br><strong>Session:</strong> ${session.metadata.session_uuid}</p>
-    <p class="small">The D-score is stored in the summary row and JSON file. Positive scores indicate a faster Disabled+Bad / Abled+Good pairing than the reverse. Do not show individual results to respondents.</p>
+    <p class="small">The D-score is stored in the summary row and JSON file. Positive scores indicate a faster Disabled+Bad / Non-disabled+Good pairing than the reverse. Do not show individual results to respondents.</p>
     <p><a href="admin.html">Open device backup manager</a></p></section>`;
   document.getElementById('save-csv').onclick = () => {
     const summaryRow = { ...session.metadata, row_type: 'summary', ...session.summary };

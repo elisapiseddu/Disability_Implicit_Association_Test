@@ -1,3 +1,3 @@
-// Version 3.2 does not use a service worker.
+// Version 3.3 does not use a service worker.
 self.addEventListener('install',()=>self.skipWaiting());
 self.addEventListener('activate',e=>e.waitUntil(self.registration.unregister()));
