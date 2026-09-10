@@ -1054,6 +1054,3 @@ document
       session_uuid: uuid()
     });
   });
-  errorBox.textContent = '';
-  startExperiment({ participant_id: participantId, enumerator_id: enumeratorId, tablet_id: tabletId, response_mode: responseMode, session_uuid: uuid() });
-});
