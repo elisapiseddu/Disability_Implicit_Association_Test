@@ -1,5 +1,5 @@
 'use strict';
-const CACHE_NAME = 'disability-iat-v5.1.0';
+const CACHE_NAME = 'disability-iat-v5.2.0';
 const CORE = [
   './', './index.html', './app.js?v=50', './style.css?v=50', './manifest.json', './admin.html',
   './A1_non_disabled_young_man.jpg',
