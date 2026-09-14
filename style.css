@@ -17,6 +17,10 @@ button, input, select { font: inherit; }
   box-shadow: 0 3px 16px rgba(0,0,0,.08);
 }
 .setup-card h1 { margin-top: 0; }
+.version-badge {
+  display: inline-block; margin: 0 0 8px; padding: 7px 11px; border-radius: 6px;
+  background: #e6f2ff; color: #103f72; font-weight: 700; border: 1px solid #8db9e8;
+}
 .setup-card label:not(.radio):not(.checkbox) { display: block; margin-top: 14px; font-weight: 700; }
 .setup-card input[type="text"], .setup-card input[type="date"], .setup-card input:not([type]), .setup-card select {
   width: 100%; padding: 12px; margin-top: 6px; border: 1px solid #888; border-radius: 6px;

@@ -5,7 +5,7 @@
 */
 'use strict';
 
-const APP_VERSION = '5.3.0';
+const APP_VERSION = '5.3.1';
 const LEFT_KEY = 'e';
 const RIGHT_KEY = 'i';
 const ERROR_PENALTY_MS = 600;
@@ -38,8 +38,8 @@ const LANGUAGE = {
   },
   lg: {
     name: 'Luganda',
-    goodWords: ['Essanyu', 'Okwagala', 'Emirembe', 'Kitalo', 'Okunyumirwa', "Eky'ekitiibwa", 'Enseko', 'Musanyufu'],
-    badWords: ['Okubonaabona', 'Entiisa', 'Kibi nnyo', 'Kitasanyusa', 'Obubi', 'Kya ntiisa', 'Okulemererwa', 'Okulumwa'],
+    goodWords: ['Sanyu', 'Kwagala', 'Mirembe', 'Kirungi nnyo', 'Kunyumirwa', "Eky'ettendo", 'Enseko', 'Essanyu'],
+    badWords: ['Kubonaabona', 'Entiisa', 'Kibi nnyo', 'Ekyenyinyaza', 'Ekibi', 'Ekyesitaza', 'Kulemererwa', 'Kulumwa'],
     good: 'Nnungi', bad: 'Kibi', disabled: 'Abalema', nonDisabled: 'Abantu abatalina bulemu',
     left: 'KKONO', right: 'DDYO', or: 'oba', continue: 'Weyongereyo', pressE: 'Nyiga E', pressI: 'Nyiga I',
     space: 'Nyiga akabonero ka SPACE okweyongerayo.',
@@ -103,7 +103,7 @@ window.addEventListener('load', async () => {
   }
 
   try {
-    await navigator.serviceWorker.register('./sw.js?v=53');
+    await navigator.serviceWorker.register('./sw.js?v=531');
 
     if (status) {
       status.textContent = navigator.onLine
