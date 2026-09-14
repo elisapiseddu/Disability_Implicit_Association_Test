@@ -2,40 +2,114 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+  />
   <meta name="theme-color" content="#ffffff" />
   <meta name="robots" content="noindex,nofollow" />
+
   <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="style.css?v=50" />
+  <link rel="stylesheet" href="style.css?v=53" />
+
   <title>Disability IAT</title>
 </head>
+
 <body>
   <main id="setup" class="setup-card">
     <h1>Disability Implicit Association Test</h1>
-    <p class="note">Version 5.0 — final matched photographic stimulus set. Complete the fields below before starting.</p>
 
-    <label for="participant-id">Seller / participant ID</label>
-    <input id="participant-id" autocomplete="off" inputmode="text" maxlength="40" placeholder="e.g. UGA-00123" />
+    <p class="note">
+      Complete the fields below before starting.
+    </p>
 
-    <label for="confirm-id">Confirm participant ID</label>
-    <input id="confirm-id" autocomplete="off" inputmode="text" maxlength="40" placeholder="Enter the same ID again" />
+    <label for="language">Test language</label>
+    <select id="language" required>
+      <option value="">Select English or Luganda</option>
+      <option value="en">English</option>
+      <option value="lg">Luganda</option>
+    </select>
 
-    <label for="enumerator-id">Enumerator ID</label>
-    <input id="enumerator-id" autocomplete="off" inputmode="text" maxlength="30" placeholder="e.g. ENUM-04" />
+    <label for="seller-id">Seller ID</label>
+    <input
+      id="seller-id"
+      autocomplete="off"
+      inputmode="text"
+      maxlength="40"
+      placeholder="Enter Seller ID"
+    />
 
-    <label for="tablet-id">Tablet ID</label>
-    <input id="tablet-id" autocomplete="off" inputmode="text" maxlength="20" placeholder="e.g. TAB-03" />
+    <label for="record-id">Record ID</label>
+    <input
+      id="record-id"
+      autocomplete="off"
+      inputmode="text"
+      maxlength="40"
+      placeholder="Enter Record ID"
+    />
+
+    <label for="enumerator-name">Enumerator name</label>
+    <input
+      id="enumerator-name"
+      autocomplete="off"
+      inputmode="text"
+      maxlength="60"
+      placeholder="Enter enumerator name"
+    />
+
+    <label for="interview-date">Date</label>
+    <input
+      id="interview-date"
+      type="date"
+    />
+
+    <label for="village-municipality">Village / municipality</label>
+    <input
+      id="village-municipality"
+      autocomplete="off"
+      inputmode="text"
+      maxlength="100"
+      placeholder="Enter village or municipality"
+    />
 
     <fieldset>
       <legend>Response mode</legend>
-      <label class="radio"><input type="radio" name="mode" value="keyboard" checked /> Physical keyboard (recommended)</label>
-      <label class="radio"><input type="radio" name="mode" value="touch" /> Touchscreen buttons (pilot carefully)</label>
+
+      <label class="radio">
+        <input
+          type="radio"
+          name="mode"
+          value="keyboard"
+          checked
+        />
+        Physical keyboard
+      </label>
+
+      <label class="radio">
+        <input
+          type="radio"
+          name="mode"
+          value="touch"
+        />
+        Touchscreen buttons
+      </label>
     </fieldset>
 
-    <label class="checkbox"><input id="consent-check" type="checkbox" /> Consent has already been recorded in REDCap.</label>
+    <label class="checkbox">
+      <input id="consent-check" type="checkbox" />
+      Consent has already been recorded in REDCap.
+    </label>
 
-    <div id="setup-error" role="alert" aria-live="polite"></div>
-    <button id="start-button" type="button">Start test</button>
+    <div
+      id="setup-error"
+      role="alert"
+      aria-live="polite"
+    ></div>
+
+    <button id="start-button" type="button">
+      Start test
+    </button>
+
     <details>
       <summary>Offline status</summary>
       <p id="offline-status">Checking...</p>
@@ -44,8 +118,7 @@
 
   <div id="jspsych-target"></div>
 
-  <!-- Version 5 registers sw.js for offline field use. -->
   <script src="https://unpkg.com/jspsych@8.2.3"></script>
-  <script src="app.js?v=50"></script>
+  <script src="app.js?v=53"></script>
 </body>
 </html>
